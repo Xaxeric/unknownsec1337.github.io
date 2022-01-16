@@ -1,0 +1,16 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css);
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Baumans);
+body {
+	font-family:"Baumans";
+	background-color:#3b3b3b;
+	color: #fff;
+}
+i a {
+	font-family:"Baumans";
+}
+::selection {
+	color: #fff;
+	background: #000;
+}
