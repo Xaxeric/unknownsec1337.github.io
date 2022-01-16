@@ -1,0 +1,25 @@
+/* mau ngapain? */
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css);
+@import url(https://fonts.googleapis.com/css?family=Baumans);
+body {
+	background-color: #333;	font-family:"Baumans"
+}
+.logo {
+	box-shadow: 1px 1px 7px #fff;
+	border: 1px solid #000;
+	border-radius: 10px;
+	background: #3d3d3d;
+	margin: 0 auto;
+	max-width: 315px;
+	min-height: 20px;
+}
+::selection {
+	color: #fff;
+	background: #333;
+}
+button:focus {
+	outline-width: 0px;
+	box-shadow: 1px 1px #007bff;
+}
