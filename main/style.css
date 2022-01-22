@@ -7,8 +7,8 @@ body {
 	background-color:#3b3b3b;
 	color: #fff;
 }
-i a {
-	font-family:"Baumans";
+.ico {
+	width:20px;
 }
 ::selection {
 	color: #fff;
